@@ -54,3 +54,21 @@ test("draws the app name in the theme's font, loaded from the app", async ({ pag
   }, THEME_FONT);
   expect(loadedFaces.length).toBeGreaterThan(0);
 });
+
+test('loads with the task screen and no console errors or page errors', async ({ page }) => {
+  const consoleErrors: string[] = [];
+  const pageErrors: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'error') consoleErrors.push(message.text());
+  });
+  page.on('pageerror', (error) => pageErrors.push(error.message));
+
+  // Load again with the listeners attached, so errors during startup are caught too.
+  await page.goto('/');
+  const tasks = page.getByRole('main').getByRole('region', { name: 'Tasks' });
+  await expect(tasks).toBeVisible();
+  await expect(tasks.getByRole('heading', { name: 'Tasks', level: 2 })).toBeVisible();
+
+  expect(consoleErrors).toEqual([]);
+  expect(pageErrors).toEqual([]);
+});

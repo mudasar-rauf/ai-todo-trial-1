@@ -16,6 +16,9 @@ export default defineConfig({
   webServer: {
     command: `npm run dev -- --port ${PORT} --strictPort`,
     url: BASE_URL,
+    // Locally an already-running dev server is reused: start it with VITE_FF_TASKS=true too.
     reuseExistingServer: !process.env.CI,
+    // The e2e tests run the app with the task screen on.
+    env: { VITE_FF_TASKS: 'true' },
   },
 });
