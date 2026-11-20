@@ -1,0 +1,5 @@
+/* Astryx's prebuilt stylesheets. The order matters: it maps to Astryx's cascade layers. */
+@import '@astryxdesign/theme-neutral/fonts.css';
+@import '@astryxdesign/core/reset.css';
+@import '@astryxdesign/core/astryx.css';
+@import '@astryxdesign/theme-neutral/theme.css';
