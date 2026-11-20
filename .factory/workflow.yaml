@@ -1,0 +1,57 @@
+# .factory/workflow.yaml
+version: 1
+name: default-delivery
+stages:
+  - id: spec_and_plan
+    role: planner
+    produces: [spec, plan, pull_request]   # a draft pull request, so the architect reviews a pinned commit
+    deadline: 30m
+    attempts: 2
+  - id: architecture_review
+    role: architect
+    token: read_only
+    consumes: [spec, plan, pull_request]
+    produces: [review_report]
+    outcomes: [approved, changes_requested]
+    on_changes_requested: spec_and_plan
+    max_loops: 2
+    deadline: 30m
+  - id: plan_gate
+    type: gate
+    approvers: collaborators
+    on_rejected: spec_and_plan
+    remind_after: 24h
+    escalate_after: 72h
+  - id: implement
+    role: developer
+    consumes: [spec, plan, pull_request]
+    produces: [pull_request, evidence]
+    deadline: 90m
+    attempts: 2
+  - id: checks
+    type: deterministic
+    source: github_checks
+    deadline: 30m
+    on_fail: implement
+    max_loops: 2          # two loop-backs; the third failure needs attention
+  - id: review
+    role: reviewer
+    token: read_only
+    constraints: [not_author]
+    consumes: [spec, pull_request, evidence]
+    produces: [review_report]
+    outcomes: [approved, changes_requested]
+    on_changes_requested: implement
+    max_loops: 2
+    deadline: 30m
+  - id: merge_gate
+    type: gate
+    approvers: collaborators
+    on_rejected: implement
+assignment:
+  default: pool
+  unclaimed_reassign_after: 10m   # a pinned step not claimed by then moves to the pool
+timers:
+  heartbeat: 30s
+  lease_ttl: 2m
+  no_taker: 15m
