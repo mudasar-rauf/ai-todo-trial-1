@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import App from './App';
 import { APP_NAME } from './appName';
 
@@ -16,5 +16,25 @@ describe('App frame', () => {
     const mains = screen.getAllByRole('main');
     expect(mains).toHaveLength(1);
     expect(mains[0]).toHaveTextContent('');
+  });
+});
+
+describe('App behind VITE_FF_TASKS', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('shows the task screen in the main landmark when the flag is "true"', () => {
+    vi.stubEnv('VITE_FF_TASKS', 'true');
+    render(<App />);
+    const main = screen.getByRole('main');
+    expect(within(main).getByRole('region', { name: 'Tasks' })).toBeInTheDocument();
+  });
+
+  it('leaves the main landmark empty when the flag is anything else', () => {
+    vi.stubEnv('VITE_FF_TASKS', 'false');
+    render(<App />);
+    expect(screen.getByRole('main')).toHaveTextContent('');
+    expect(screen.queryByRole('region', { name: 'Tasks' })).not.toBeInTheDocument();
   });
 });
