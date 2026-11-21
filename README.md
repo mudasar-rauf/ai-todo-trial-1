@@ -27,11 +27,30 @@ This installs exactly the versions `package-lock.json` pins, as CI does.
 npm run dev
 ```
 
-The dev server opens at <http://localhost:5173/> (if that port is taken, Vite picks another and prints the URL it uses). Without the flag the app shows only its empty frame. To see the task screen, turn on `VITE_FF_TASKS`:
+The dev server serves the app at <http://localhost:5173/>; open that URL in your browser (no browser opens by itself). If the port is taken, Vite picks another and prints the URL it uses. Without the flag the app shows only its empty frame. To see the task screen, turn on `VITE_FF_TASKS` when you start it.
+
+In macOS, Linux and other POSIX shells:
 
 ```sh
 VITE_FF_TASKS=true npm run dev
 ```
+
+In PowerShell:
+
+```powershell
+$env:VITE_FF_TASKS = 'true'
+npm run dev
+```
+
+The variable stays set for the rest of that PowerShell session; `Remove-Item Env:VITE_FF_TASKS` turns it off.
+
+In cmd:
+
+```bat
+set "VITE_FF_TASKS=true" && npm run dev
+```
+
+The quotes keep the space before `&&` out of the value, which must be exactly `true`. The variable stays set for that window; `set VITE_FF_TASKS=` turns it off.
 
 ### The checks CI runs
 
