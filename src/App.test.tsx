@@ -15,7 +15,7 @@ describe('App frame', () => {
     render(<App />);
     const mains = screen.getAllByRole('main');
     expect(mains).toHaveLength(1);
-    expect(mains[0]).toHaveTextContent('');
+    expect(mains[0]).toBeEmptyDOMElement();
   });
 });
 
@@ -34,7 +34,7 @@ describe('App behind VITE_FF_TASKS', () => {
   it('leaves the main landmark empty when the flag is anything else', () => {
     vi.stubEnv('VITE_FF_TASKS', 'false');
     render(<App />);
-    expect(screen.getByRole('main')).toHaveTextContent('');
+    expect(screen.getByRole('main')).toBeEmptyDOMElement();
     expect(screen.queryByRole('region', { name: 'Tasks' })).not.toBeInTheDocument();
   });
 });
