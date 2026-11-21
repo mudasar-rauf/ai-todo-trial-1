@@ -16,7 +16,7 @@ function renderScreen() {
   return { storage, old, user: userEvent.setup() };
 }
 
-const lastSaved = (storage: { save: { mock: { calls: Task[][] } } }) => storage.save.mock.calls.at(-1)?.[0];
+const lastSaved = (storage: ReturnType<typeof renderScreen>['storage']) => storage.save.mock.calls.at(-1)?.[0];
 const form = () => screen.getByRole('form', { name: 'Add task' });
 const field = (label: string) => within(form()).getByLabelText(label);
 const rows = () => within(screen.getByRole('list', { name: 'Tasks' })).getAllByRole('listitem');
