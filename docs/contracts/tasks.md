@@ -85,6 +85,7 @@ Today every file above is a stub. Each starts with `// Stub owned by F<n> (...)`
 Features do not edit these:
 
 - everything in `src/tasks/` (the files in section 1, and their tests);
+- [`src/tasks/TaskScreenErrorBoundary.tsx`](../../src/tasks/TaskScreenErrorBoundary.tsx) (#15): `App.tsx` wraps `TaskScreen` in it, so an unexpected error shows "Something went wrong" and a Reload button in the main region while the banner stays. It is not a contract type: features neither import nor change it;
 - `src/flags.ts`, `src/vite-env.d.ts`, `src/App.tsx`, `src/main.tsx`, `src/index.css`;
 - `src/test/` (the test setup and `taskFixtures.ts`'s `makeTask`);
 - `e2e/frame.spec.ts`, `playwright.config.ts`, `vite.config.ts`, `eslint.config.js`, the tsconfig files, `package.json`;
